@@ -12,15 +12,12 @@ public class DocentesView extends JFrame {
     private JTable table;
     private DefaultTableModel tableModel;
 
-    // Componentes de formulario
     private JTextField txtNombre;
     private JTextField txtEmail;
     private JTextField txtDepartamento;
 
-    // Componentes de filtro
     private JTextField txtFiltroDepartamento;
     private JButton btnFiltrar;
-
 
     public DocentesView() {
         controller = new DocenteController();
@@ -34,10 +31,8 @@ public class DocentesView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Panel principal
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Panel de formulario (Norte)
         JPanel formPanel = new JPanel(new GridLayout(4, 2, 5, 5));
         formPanel.setBorder(BorderFactory.createTitledBorder("Datos del Docente"));
 
@@ -62,7 +57,6 @@ public class DocentesView extends JFrame {
         formPanel.add(btnGuardar);
         formPanel.add(btnLimpiar);
 
-        // Panel de filtros (Centro - Arriba de la tabla)
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         filterPanel.setBorder(BorderFactory.createTitledBorder("Filtrar Docentes"));
         JLabel lblFiltroDepartamento = new JLabel("Departamento:");
@@ -73,8 +67,6 @@ public class DocentesView extends JFrame {
         filterPanel.add(txtFiltroDepartamento);
         filterPanel.add(btnFiltrar);
 
-
-        // Panel que contendrá el filtro y la tabla (Centro)
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
@@ -89,8 +81,6 @@ public class DocentesView extends JFrame {
 
         centerPanel.add(scrollPane, BorderLayout.CENTER);
 
-
-        // Panel de botones de acción (Sur)
         JPanel actionPanel = new JPanel(new FlowLayout());
 
         JButton btnEditar = new JButton("Editar");
@@ -101,7 +91,6 @@ public class DocentesView extends JFrame {
         actionPanel.add(btnEliminar);
         actionPanel.add(btnActualizar);
 
-        // Añadir paneles al panel principal
         mainPanel.add(formPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(actionPanel, BorderLayout.SOUTH);
@@ -128,10 +117,9 @@ public class DocentesView extends JFrame {
 
         btnActualizar.addActionListener(e -> cargarDocentes());
 
-        // Listener para el botón de filtro
         btnFiltrar.addActionListener(e -> {
             String departamentoFiltro = txtFiltroDepartamento.getText();
-            cargarDocentes(departamentoFiltro); // Cargar docentes aplicando el filtro
+            cargarDocentes(departamentoFiltro);
         });
     }
 
@@ -142,7 +130,6 @@ public class DocentesView extends JFrame {
                 return false;
             }
         }
-        // Validación de email básico
         if (!campos[1].matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
             JOptionPane.showMessageDialog(this, "Ingrese un correo electrónico válido", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -165,7 +152,7 @@ public class DocentesView extends JFrame {
         for (JTextField campo : campos) {
             campo.setText("");
         }
-        txtFiltroDepartamento.setText(""); // Limpiar también el campo de filtro
+        txtFiltroDepartamento.setText("");
     }
 
     private void editarDocente() {
@@ -222,7 +209,7 @@ public class DocentesView extends JFrame {
     }
 
     private void cargarDocentes() {
-        cargarDocentes(""); // Cargar todos los docentes por defecto
+        cargarDocentes("");
     }
 
     private void cargarDocentes(String departamentoFiltro) {

@@ -76,8 +76,6 @@ public class CursoDAO {
         String sql = "DELETE FROM curso WHERE id_curso = " + id;
         return q.queryUpdate(sql);
     }
-
-    // Nuevos métodos para buscar cursos
     public List<Curso> getCursosByNombre(String nombre) {
         List<Curso> cursos = new ArrayList<>();
         String sql = String.format("SELECT id_curso, nombre, creditos, id_docente FROM curso WHERE nombre LIKE '%%%s%%'", nombre);

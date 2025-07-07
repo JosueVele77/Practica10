@@ -19,11 +19,9 @@ public class CursoView extends JFrame {
     private DefaultTableModel tableModel;
     private JComboBox<Docente> docenteComboBox;
 
-    // Componentes de formulario
     private JTextField txtNombre;
     private JSpinner spnCreditos;
 
-    // Componentes de filtro
     private JTextField txtFiltroNombre;
     private JSpinner spnFiltroCreditos;
     private JButton btnFiltrar;
@@ -43,10 +41,8 @@ public class CursoView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Panel principal
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Panel de formulario (Norte)
         JPanel formPanel = new JPanel(new GridLayout(4, 2, 5, 5));
         formPanel.setBorder(BorderFactory.createTitledBorder("Datos del Curso"));
 
@@ -71,7 +67,6 @@ public class CursoView extends JFrame {
         formPanel.add(btnGuardar);
         formPanel.add(btnLimpiar);
 
-        // Panel de filtros (Centro - Arriba de la tabla)
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         filterPanel.setBorder(BorderFactory.createTitledBorder("Filtrar Cursos"));
         JLabel lblFiltroNombre = new JLabel("Nombre:");
@@ -86,7 +81,6 @@ public class CursoView extends JFrame {
         filterPanel.add(spnFiltroCreditos);
         filterPanel.add(btnFiltrar);
 
-        // Panel que contendrá el filtro y la tabla (Centro)
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.add(filterPanel, BorderLayout.NORTH);
 
@@ -102,8 +96,6 @@ public class CursoView extends JFrame {
 
         centerPanel.add(scrollPane, BorderLayout.CENTER);
 
-
-        // Panel de botones de acción (Sur)
         JPanel actionPanel = new JPanel(new FlowLayout());
 
         JButton btnEditar = new JButton("Editar");
@@ -114,14 +106,12 @@ public class CursoView extends JFrame {
         actionPanel.add(btnEliminar);
         actionPanel.add(btnActualizar);
 
-        // Añadir paneles al panel principal
         mainPanel.add(formPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(actionPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
 
-        // Listeners
         btnGuardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -237,16 +227,15 @@ public class CursoView extends JFrame {
             }
         });
 
-        // Listener para el botón de filtro
         btnFiltrar.addActionListener(e -> {
             String nombreFiltro = txtFiltroNombre.getText();
             int creditosFiltro = (int) spnFiltroCreditos.getValue();
-            cargarCursos(nombreFiltro, creditosFiltro); // Cargar cursos aplicando los filtros
+            cargarCursos(nombreFiltro, creditosFiltro);
         });
     }
 
     private void cargarCursos() {
-        cargarCursos("", 0); // Cargar todos los cursos por defecto (0 para créditos significa sin filtro)
+        cargarCursos("", 0);
     }
 
     private void cargarCursos(String nombreFiltro, int creditosFiltro) {
@@ -254,7 +243,7 @@ public class CursoView extends JFrame {
         List<Curso> cursos;
 
         boolean nombreVacio = (nombreFiltro == null || nombreFiltro.trim().isEmpty());
-        boolean creditosInvalidos = (creditosFiltro <= 0); // Consideramos 0 como "sin filtro" o inválido
+        boolean creditosInvalidos = (creditosFiltro <= 0);
 
         if (nombreVacio && creditosInvalidos) {
             cursos = cursoController.listarCursos();
@@ -283,7 +272,6 @@ public class CursoView extends JFrame {
         for (Docente docente : docentes) {
             docenteComboBox.addItem(docente);
         }
-        // Asegurarse de que el ComboBox muestre el nombre del docente
         docenteComboBox.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -303,7 +291,7 @@ public class CursoView extends JFrame {
         if (docenteComboBox.getItemCount() > 0) {
             docenteComboBox.setSelectedIndex(0);
         }
-        txtFiltroNombre.setText(""); // Limpiar también los campos de filtro
+        txtFiltroNombre.setText("");
         spnFiltroCreditos.setValue(0);
     }
 }

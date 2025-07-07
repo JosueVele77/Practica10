@@ -102,8 +102,6 @@ public class EstudianteDAO {
         }
         return estudiantes;
     }
-
-    // Nuevo método para buscar estudiantes por año de ingreso
     public List<Estudiante> getEstudiantesByAnioIngreso(int anioIngreso) {
         List<Estudiante> estudiantes = new ArrayList<>();
         String sql = "SELECT id_estudiante, nombre, email, carrera, anio_ingreso FROM estudiante WHERE anio_ingreso = " + anioIngreso;
@@ -127,7 +125,6 @@ public class EstudianteDAO {
         return estudiantes;
     }
 
-    // Nuevo método para buscar estudiantes por año de ingreso y carrera
     public List<Estudiante> getEstudiantesByAnioIngresoAndCarrera(int anioIngreso, String carrera) {
         List<Estudiante> estudiantes = new ArrayList<>();
         String sql = String.format("SELECT id_estudiante, nombre, email, carrera, anio_ingreso FROM estudiante WHERE anio_ingreso = %d AND carrera = '%s'", anioIngreso, carrera);

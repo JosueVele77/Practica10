@@ -42,10 +42,9 @@ public class DocenteController {
         return docenteDAO.getDocenteById(id);
     }
 
-    // Nuevo método para buscar docentes por departamento
     public List<Docente> buscarDocentesPorDepartamento(String departamento) {
         if (departamento == null || departamento.trim().isEmpty()) {
-            return docenteDAO.getAllDocentes(); // Si el filtro está vacío, mostrar todos
+            return docenteDAO.getAllDocentes();
         }
         return docenteDAO.getDocentesByDepartamento(departamento);
     }

@@ -11,35 +11,29 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Crear barra de menú
         JMenuBar menuBar = new JMenuBar();
 
-        // Menú Docentes
         JMenu docentesMenu = new JMenu("Docentes");
         JMenuItem gestionDocentesItem = new JMenuItem("Gestión de Docentes");
         gestionDocentesItem.addActionListener(this::mostrarVentanaDocentes);
         docentesMenu.add(gestionDocentesItem);
 
-        // Menú Cursos
         JMenu cursosMenu = new JMenu("Cursos");
         JMenuItem gestionCursosItem = new JMenuItem("Gestión de Cursos");
         gestionCursosItem.addActionListener(this::mostrarVentanaCursos);
         cursosMenu.add(gestionCursosItem);
 
-        // Menú Estudiantes
         JMenu estudiantesMenu = new JMenu("Estudiantes");
         JMenuItem gestionEstudiantesItem = new JMenuItem("Gestión de Estudiantes");
         gestionEstudiantesItem.addActionListener(this::mostrarVentanaEstudiantes);
         estudiantesMenu.add(gestionEstudiantesItem);
 
-        // Añadir menús a la barra
         menuBar.add(docentesMenu);
         menuBar.add(cursosMenu);
         menuBar.add(estudiantesMenu);
 
         setJMenuBar(menuBar);
 
-        // Panel principal con mensaje de bienvenida
         JPanel mainPanel = new JPanel(new BorderLayout());
         JLabel lblBienvenida = new JLabel("Bienvenido al Sistema de Gestión Académica", SwingConstants.CENTER);
         lblBienvenida.setFont(new Font("Arial", Font.BOLD, 24));

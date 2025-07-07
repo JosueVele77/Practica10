@@ -59,26 +59,22 @@ public class EstudianteController {
 
     public List<Estudiante> buscarEstudiantesPorCarrera(String carrera) {
         if (carrera == null || carrera.trim().isEmpty()) {
-            return listarEstudiantes(); // Si el filtro está vacío, mostrar todos
+            return listarEstudiantes();
         }
         return estudianteDAO.getEstudiantesByCarrera(carrera);
     }
-
-    // Nuevo método para buscar estudiantes por año de ingreso
     public List<Estudiante> buscarEstudiantesPorAnioIngreso(int anioIngreso) {
         if (anioIngreso <= 0) {
-            return listarEstudiantes(); // Si el filtro no es válido, mostrar todos
+            return listarEstudiantes();
         }
         return estudianteDAO.getEstudiantesByAnioIngreso(anioIngreso);
     }
-
-    // Nuevo método para buscar estudiantes por año de ingreso y carrera
     public List<Estudiante> buscarEstudiantesPorAnioIngresoYCarrera(int anioIngreso, String carrera) {
         boolean anioInvalido = (anioIngreso <= 0);
-        boolean carreraVacia = (carrera == null || carrera.trim().isEmpty() || carrera.equals("Todas")); // 'Todas' también implica filtro vacío
+        boolean carreraVacia = (carrera == null || carrera.trim().isEmpty() || carrera.equals("Todas"));
 
         if (anioInvalido && carreraVacia) {
-            return listarEstudiantes(); // Si ambos filtros están vacíos/inválidos, mostrar todos
+            return listarEstudiantes();
         } else if (anioInvalido) {
             return estudianteDAO.getEstudiantesByCarrera(carrera);
         } else if (carreraVacia) {

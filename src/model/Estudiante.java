@@ -18,7 +18,6 @@ public class Estudiante {
         this.anio_ingreso = anio_ingreso;
     }
 
-    // Getters y Setters
     public int getId_estudiante() { return id_estudiante; }
     public void setId_estudiante(int id_estudiante) { this.id_estudiante = id_estudiante; }
     public String getNombre() { return nombre; }

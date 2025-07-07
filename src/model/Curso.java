@@ -8,7 +8,6 @@ public class Curso {
 
     public Curso() {
     }
-
     public Curso(int id_curso, String nombre, int creditos, int id_docente) {
         this.id_curso = id_curso;
         this.nombre = nombre;
@@ -16,7 +15,6 @@ public class Curso {
         this.id_docente = id_docente;
     }
 
-    // Getters y Setters
     public int getId_curso() { return id_curso; }
     public void setId_curso(int id_curso) { this.id_curso = id_curso; }
     public String getNombre() { return nombre; }

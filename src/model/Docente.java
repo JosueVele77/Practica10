@@ -15,8 +15,6 @@ public class Docente {
         this.email = email;
         this.departamento = departamento;
     }
-
-    // Getters y Setters
     public int getId_docente() { return id_docente; }
     public void setId_docente(int id_docente) { this.id_docente = id_docente; }
     public String getNombre() { return nombre; }

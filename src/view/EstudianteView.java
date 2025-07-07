@@ -18,12 +18,10 @@ public class EstudianteView extends JFrame {
     private DefaultTableModel tableModel;
     private JComboBox<String> carreraComboBox;
 
-    // Componentes de formulario
     private JTextField txtNombre;
     private JTextField txtEmail;
     private JSpinner spnAnioIngreso;
 
-    // Componentes de filtro
     private JSpinner spnFiltroAnioIngreso;
     private JComboBox<String> filterCarreraComboBox;
     private JButton btnFiltrar;
@@ -41,10 +39,8 @@ public class EstudianteView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Panel principal
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Panel de formulario (Norte)
         JPanel formPanel = new JPanel(new GridLayout(5, 2, 5, 5));
         formPanel.setBorder(BorderFactory.createTitledBorder("Datos del Estudiante"));
 
@@ -60,7 +56,7 @@ public class EstudianteView extends JFrame {
         JLabel lblAnioIngreso = new JLabel("Año Ingreso:");
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         spnAnioIngreso = new JSpinner(new SpinnerNumberModel(currentYear, 1990, currentYear + 5, 1)); // Rango de años de 1990 al actual + 5
-        // Configurar el formato del JSpinner para que el año no tenga decimales
+
         JSpinner.NumberEditor editor = new JSpinner.NumberEditor(spnAnioIngreso, "#");
         spnAnioIngreso.setEditor(editor);
 
@@ -79,13 +75,13 @@ public class EstudianteView extends JFrame {
         formPanel.add(btnGuardar);
         formPanel.add(btnLimpiar);
 
-        // Panel de filtros (Centro - Arriba de la tabla)
+
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         filterPanel.setBorder(BorderFactory.createTitledBorder("Filtrar Estudiantes"));
 
         JLabel lblFiltrarAnioIngreso = new JLabel("Año Ingreso:");
         spnFiltroAnioIngreso = new JSpinner(new SpinnerNumberModel(0, 0, currentYear + 5, 1)); // 0 para "todas" o sin filtro
-        // Configurar el formato del JSpinner de filtro también
+
         JSpinner.NumberEditor filterEditor = new JSpinner.NumberEditor(spnFiltroAnioIngreso, "#");
         spnFiltroAnioIngreso.setEditor(filterEditor);
 
@@ -100,10 +96,8 @@ public class EstudianteView extends JFrame {
         filterPanel.add(filterCarreraComboBox);
         filterPanel.add(btnFiltrar);
 
-        // Panel que contendrá el filtro y la tabla (Centro)
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.add(filterPanel, BorderLayout.NORTH);
-
 
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
@@ -117,8 +111,6 @@ public class EstudianteView extends JFrame {
 
         centerPanel.add(scrollPane, BorderLayout.CENTER);
 
-
-        // Panel de botones de acción (Sur)
         JPanel actionPanel = new JPanel(new FlowLayout());
 
         JButton btnEditar = new JButton("Editar");
@@ -257,7 +249,6 @@ public class EstudianteView extends JFrame {
             }
         });
 
-        // Listener para el botón de filtro
         btnFiltrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -271,7 +262,6 @@ public class EstudianteView extends JFrame {
     }
 
     private void cargarEstudiantes() {
-        // Cargar todos los estudiantes por defecto (0 para año de ingreso indica sin filtro)
         cargarEstudiantes(0, "Todas");
     }
 
@@ -279,7 +269,7 @@ public class EstudianteView extends JFrame {
         tableModel.setRowCount(0);
         List<Estudiante> estudiantes;
 
-        boolean anioInvalido = (anioIngresoFiltro <= 0); // 0 significa "sin filtro"
+        boolean anioInvalido = (anioIngresoFiltro <= 0);
         boolean carreraVacia = (carreraFiltro == null || carreraFiltro.trim().isEmpty() || carreraFiltro.equals("Todas"));
 
 
@@ -305,12 +295,12 @@ public class EstudianteView extends JFrame {
     private void limpiarCampos() {
         txtNombre.setText("");
         txtEmail.setText("");
-        spnAnioIngreso.setValue(Calendar.getInstance().get(Calendar.YEAR)); // Restablecer al año actual
+        spnAnioIngreso.setValue(Calendar.getInstance().get(Calendar.YEAR));
         if (carreraComboBox.getItemCount() > 0) {
-            carreraComboBox.setSelectedIndex(0); // Restablecer a la primera opción de carrera
+            carreraComboBox.setSelectedIndex(0);
         }
 
-        spnFiltroAnioIngreso.setValue(0); // Limpiar filtros
-        filterCarreraComboBox.setSelectedItem("Todas"); // Limpiar filtro de carrera
+        spnFiltroAnioIngreso.setValue(0);
+        filterCarreraComboBox.setSelectedItem("Todas");
     }
 }

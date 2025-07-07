@@ -77,7 +77,6 @@ public class DocenteDAO {
         return q.queryUpdate(sql);
     }
 
-    // Nuevo método para buscar docentes por departamento
     public List<Docente> getDocentesByDepartamento(String departamento) {
         List<Docente> docentes = new ArrayList<>();
         String sql = String.format("SELECT id_docente, nombre, email, departamento FROM docente WHERE departamento LIKE '%%%s%%'", departamento);
