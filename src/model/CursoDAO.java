@@ -1,7 +1,6 @@
 package model;
 
 import connection.query;
-import model.Curso;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ public class CursoDAO {
 
     public List<Curso> getAllCursos() {
         List<Curso> cursos = new ArrayList<>();
-        String sql = "SELECT * FROM curso";
+        String sql = "SELECT id_curso, nombre, creditos, id_docente FROM curso";
 
         try {
             ResultSet rs = q.queryRest(sql);
@@ -37,7 +36,7 @@ public class CursoDAO {
     }
 
     public Curso getCursoById(int id) {
-        String sql = "SELECT * FROM curso WHERE id_curso = " + id;
+        String sql = "SELECT id_curso, nombre, creditos, id_docente FROM curso WHERE id_curso = " + id;
         Curso curso = null;
 
         try {
@@ -76,5 +75,72 @@ public class CursoDAO {
     public boolean deleteCurso(int id) {
         String sql = "DELETE FROM curso WHERE id_curso = " + id;
         return q.queryUpdate(sql);
+    }
+
+    // Nuevos métodos para buscar cursos
+    public List<Curso> getCursosByNombre(String nombre) {
+        List<Curso> cursos = new ArrayList<>();
+        String sql = String.format("SELECT id_curso, nombre, creditos, id_docente FROM curso WHERE nombre LIKE '%%%s%%'", nombre);
+
+        try {
+            ResultSet rs = q.queryRest(sql);
+            while (rs.next()) {
+                Curso c = new Curso();
+                c.setId_curso(rs.getInt("id_curso"));
+                c.setNombre(rs.getString("nombre"));
+                c.setCreditos(rs.getInt("creditos"));
+                c.setId_docente(rs.getInt("id_docente"));
+                cursos.add(c);
+            }
+            rs.close();
+            q.closeConn();
+        } catch (SQLException e) {
+            System.err.println("Error al obtener cursos por nombre: " + e.getMessage());
+        }
+        return cursos;
+    }
+
+    public List<Curso> getCursosByCreditos(int creditos) {
+        List<Curso> cursos = new ArrayList<>();
+        String sql = "SELECT id_curso, nombre, creditos, id_docente FROM curso WHERE creditos = " + creditos;
+
+        try {
+            ResultSet rs = q.queryRest(sql);
+            while (rs.next()) {
+                Curso c = new Curso();
+                c.setId_curso(rs.getInt("id_curso"));
+                c.setNombre(rs.getString("nombre"));
+                c.setCreditos(rs.getInt("creditos"));
+                c.setId_docente(rs.getInt("id_docente"));
+                cursos.add(c);
+            }
+            rs.close();
+            q.closeConn();
+        } catch (SQLException e) {
+            System.err.println("Error al obtener cursos por créditos: " + e.getMessage());
+        }
+        return cursos;
+    }
+
+    public List<Curso> getCursosByNombreAndCreditos(String nombre, int creditos) {
+        List<Curso> cursos = new ArrayList<>();
+        String sql = String.format("SELECT id_curso, nombre, creditos, id_docente FROM curso WHERE nombre LIKE '%%%s%%' AND creditos = %d", nombre, creditos);
+
+        try {
+            ResultSet rs = q.queryRest(sql);
+            while (rs.next()) {
+                Curso c = new Curso();
+                c.setId_curso(rs.getInt("id_curso"));
+                c.setNombre(rs.getString("nombre"));
+                c.setCreditos(rs.getInt("creditos"));
+                c.setId_docente(rs.getInt("id_docente"));
+                cursos.add(c);
+            }
+            rs.close();
+            q.closeConn();
+        } catch (SQLException e) {
+            System.err.println("Error al obtener cursos por nombre y créditos: " + e.getMessage());
+        }
+        return cursos;
     }
 }

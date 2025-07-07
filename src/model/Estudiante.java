@@ -7,6 +7,17 @@ public class Estudiante {
     private String carrera;
     private int anio_ingreso;
 
+    public Estudiante() {
+    }
+
+    public Estudiante(int id_estudiante, String nombre, String email, String carrera, int anio_ingreso) {
+        this.id_estudiante = id_estudiante;
+        this.nombre = nombre;
+        this.email = email;
+        this.carrera = carrera;
+        this.anio_ingreso = anio_ingreso;
+    }
+
     // Getters y Setters
     public int getId_estudiante() { return id_estudiante; }
     public void setId_estudiante(int id_estudiante) { this.id_estudiante = id_estudiante; }

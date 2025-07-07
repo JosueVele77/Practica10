@@ -16,10 +16,7 @@ public class CursoController {
         if (nombre == null || nombre.trim().isEmpty()) {
             return false;
         }
-        if (creditos <= 0) {
-            return false;
-        }
-        if (docenteId <= 0) {
+        if (creditos <= 0 || docenteId <= 0) {
             return false;
         }
 
@@ -33,16 +30,10 @@ public class CursoController {
 
     public boolean actualizarCurso(int id, String nombre, int creditos, int docenteId) {
         // Validación básica
-        if (id <= 0) {
+        if (id <= 0 || nombre == null || nombre.trim().isEmpty()) {
             return false;
         }
-        if (nombre == null || nombre.trim().isEmpty()) {
-            return false;
-        }
-        if (creditos <= 0) {
-            return false;
-        }
-        if (docenteId <= 0) {
+        if (creditos <= 0 || docenteId <= 0) {
             return false;
         }
 
@@ -62,22 +53,44 @@ public class CursoController {
         return cursoDAO.deleteCurso(id);
     }
 
-    public List<Curso> listarTodosCursos() {
+    public List<Curso> listarCursos() {
         return cursoDAO.getAllCursos();
     }
 
-    public Curso obtenerCursoPorId(int id) {
+    public Curso buscarCursoPorId(int id) {
         if (id <= 0) {
             return null;
         }
         return cursoDAO.getCursoById(id);
     }
 
-    // Método adicional si necesitas buscar cursos por docente
-    public List<Curso> buscarCursosPorDocente(int idDocente) {
-        if (idDocente <= 0) {
-            return null;
+    // Nuevos métodos para buscar cursos
+    public List<Curso> buscarCursosPorNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return listarCursos(); // Si el filtro está vacío, mostrar todos
         }
-        return cursoDAO.getCursosByDocente(idDocente);
+        return cursoDAO.getCursosByNombre(nombre);
+    }
+
+    public List<Curso> buscarCursosPorCreditos(int creditos) {
+        if (creditos <= 0) {
+            return listarCursos(); // Si el filtro no es válido, mostrar todos
+        }
+        return cursoDAO.getCursosByCreditos(creditos);
+    }
+
+    public List<Curso> buscarCursosPorNombreYCreditos(String nombre, int creditos) {
+        boolean nombreVacio = (nombre == null || nombre.trim().isEmpty());
+        boolean creditosInvalidos = (creditos <= 0);
+
+        if (nombreVacio && creditosInvalidos) {
+            return listarCursos(); // Si ambos filtros están vacíos/inválidos, mostrar todos
+        } else if (nombreVacio) {
+            return cursoDAO.getCursosByCreditos(creditos);
+        } else if (creditosInvalidos) {
+            return cursoDAO.getCursosByNombre(nombre);
+        } else {
+            return cursoDAO.getCursosByNombreAndCreditos(nombre, creditos);
+        }
     }
 }

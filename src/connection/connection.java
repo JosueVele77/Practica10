@@ -29,8 +29,14 @@ public class connection implements configurable{
     }
 
     public boolean closeConn() {
-        if(conn!=null)
-            return true;
+        try {
+            if (conn != null) {
+                conn.close();
+                return true;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al cerrar la conexión: " + e.getMessage());
+        }
         return false;
     }
 }

@@ -1,7 +1,6 @@
 package model;
 
 import connection.query;
-import model.Docente;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ public class DocenteDAO {
 
     public List<Docente> getAllDocentes() {
         List<Docente> docentes = new ArrayList<>();
-        String sql = "SELECT * FROM docente";
+        String sql = "SELECT id_docente, nombre, email, departamento FROM docente";
 
         try {
             ResultSet rs = q.queryRest(sql);
@@ -37,7 +36,7 @@ public class DocenteDAO {
     }
 
     public Docente getDocenteById(int id) {
-        String sql = "SELECT * FROM docente WHERE id_docente = " + id;
+        String sql = "SELECT id_docente, nombre, email, departamento FROM docente WHERE id_docente = " + id;
         Docente docente = null;
 
         try {
@@ -76,5 +75,28 @@ public class DocenteDAO {
     public boolean deleteDocente(int id) {
         String sql = "DELETE FROM docente WHERE id_docente = " + id;
         return q.queryUpdate(sql);
+    }
+
+    // Nuevo método para buscar docentes por departamento
+    public List<Docente> getDocentesByDepartamento(String departamento) {
+        List<Docente> docentes = new ArrayList<>();
+        String sql = String.format("SELECT id_docente, nombre, email, departamento FROM docente WHERE departamento LIKE '%%%s%%'", departamento);
+
+        try {
+            ResultSet rs = q.queryRest(sql);
+            while (rs.next()) {
+                Docente d = new Docente();
+                d.setId_docente(rs.getInt("id_docente"));
+                d.setNombre(rs.getString("nombre"));
+                d.setEmail(rs.getString("email"));
+                d.setDepartamento(rs.getString("departamento"));
+                docentes.add(d);
+            }
+            rs.close();
+            q.closeConn();
+        } catch (SQLException e) {
+            System.err.println("Error al obtener docentes por departamento: " + e.getMessage());
+        }
+        return docentes;
     }
 }

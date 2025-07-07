@@ -54,12 +54,12 @@ public class MainFrame extends JFrame {
     }
 
     private void mostrarVentanaCursos(ActionEvent e) {
-        // Implementar similar a DocenteView
-        JOptionPane.showMessageDialog(this, "Implementar vista de cursos");
+        CursoView cursoView = new CursoView();
+        cursoView.setVisible(true);
     }
 
     private void mostrarVentanaEstudiantes(ActionEvent e) {
-        // Implementar similar a DocenteView
-        JOptionPane.showMessageDialog(this, "Implementar vista de estudiantes");
+        EstudianteView estudianteView = new EstudianteView();
+        estudianteView.setVisible(true);
     }
 }

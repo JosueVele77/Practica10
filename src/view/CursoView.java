@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.List;
 import controller.CursoController;
 import controller.DocenteController;
@@ -16,8 +17,17 @@ public class CursoView extends JFrame {
     private DocenteController docenteController;
     private JTable table;
     private DefaultTableModel tableModel;
-    private JComboBox<String> carreraComboBox;
     private JComboBox<Docente> docenteComboBox;
+
+    // Componentes de formulario
+    private JTextField txtNombre;
+    private JSpinner spnCreditos;
+
+    // Componentes de filtro
+    private JTextField txtFiltroNombre;
+    private JSpinner spnFiltroCreditos;
+    private JButton btnFiltrar;
+
 
     public CursoView() {
         cursoController = new CursoController();
@@ -36,20 +46,15 @@ public class CursoView extends JFrame {
         // Panel principal
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Panel de formulario
-        JPanel formPanel = new JPanel(new GridLayout(6, 2, 5, 5));
+        // Panel de formulario (Norte)
+        JPanel formPanel = new JPanel(new GridLayout(4, 2, 5, 5));
+        formPanel.setBorder(BorderFactory.createTitledBorder("Datos del Curso"));
 
         JLabel lblNombre = new JLabel("Nombre:");
-        JTextField txtNombre = new JTextField();
+        txtNombre = new JTextField();
 
         JLabel lblCreditos = new JLabel("Créditos:");
-        JSpinner spnCreditos = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
-
-        JLabel lblCarrera = new JLabel("Carrera:");
-        carreraComboBox = new JComboBox<>(new String[]{"Ingeniería de Sistemas", "Ingeniería Civil", "Medicina", "Derecho", "Administración"});
-
-        JLabel lblCiclo = new JLabel("Ciclo:");
-        JSpinner spnCiclo = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
+        spnCreditos = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
 
         JLabel lblDocente = new JLabel("Docente:");
         docenteComboBox = new JComboBox<>();
@@ -61,43 +66,44 @@ public class CursoView extends JFrame {
         formPanel.add(txtNombre);
         formPanel.add(lblCreditos);
         formPanel.add(spnCreditos);
-        formPanel.add(lblCarrera);
-        formPanel.add(carreraComboBox);
-        formPanel.add(lblCiclo);
-        formPanel.add(spnCiclo);
         formPanel.add(lblDocente);
         formPanel.add(docenteComboBox);
         formPanel.add(btnGuardar);
         formPanel.add(btnLimpiar);
 
-        // Panel de tabla
-        JPanel tablePanel = new JPanel(new BorderLayout());
+        // Panel de filtros (Centro - Arriba de la tabla)
+        JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        filterPanel.setBorder(BorderFactory.createTitledBorder("Filtrar Cursos"));
+        JLabel lblFiltroNombre = new JLabel("Nombre:");
+        txtFiltroNombre = new JTextField(15);
+        JLabel lblFiltroCreditos = new JLabel("Créditos:");
+        spnFiltroCreditos = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1)); // 0 para indicar "todos" o sin filtro
+        btnFiltrar = new JButton("Filtrar");
+
+        filterPanel.add(lblFiltroNombre);
+        filterPanel.add(txtFiltroNombre);
+        filterPanel.add(lblFiltroCreditos);
+        filterPanel.add(spnFiltroCreditos);
+        filterPanel.add(btnFiltrar);
+
+        // Panel que contendrá el filtro y la tabla (Centro)
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.add(filterPanel, BorderLayout.NORTH);
+
 
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
         tableModel.addColumn("Nombre");
         tableModel.addColumn("Créditos");
-        tableModel.addColumn("Carrera");
-        tableModel.addColumn("Ciclo");
         tableModel.addColumn("Docente");
 
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
 
-        tablePanel.add(scrollPane, BorderLayout.CENTER);
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Panel de filtros
-        JPanel filterPanel = new JPanel(new FlowLayout());
 
-        JLabel lblFiltrarCarrera = new JLabel("Filtrar por carrera:");
-        JComboBox<String> filterCarreraComboBox = new JComboBox<>(new String[]{"Todas", "Ingeniería de Sistemas", "Ingeniería Civil", "Medicina", "Derecho", "Administración"});
-        JButton btnFiltrar = new JButton("Filtrar");
-
-        filterPanel.add(lblFiltrarCarrera);
-        filterPanel.add(filterCarreraComboBox);
-        filterPanel.add(btnFiltrar);
-
-        // Panel de botones de acción
+        // Panel de botones de acción (Sur)
         JPanel actionPanel = new JPanel(new FlowLayout());
 
         JButton btnEditar = new JButton("Editar");
@@ -110,8 +116,7 @@ public class CursoView extends JFrame {
 
         // Añadir paneles al panel principal
         mainPanel.add(formPanel, BorderLayout.NORTH);
-        mainPanel.add(filterPanel, BorderLayout.CENTER);
-        mainPanel.add(tablePanel, BorderLayout.CENTER);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(actionPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
@@ -122,20 +127,18 @@ public class CursoView extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String nombre = txtNombre.getText();
                 int creditos = (int) spnCreditos.getValue();
-                String carrera = (String) carreraComboBox.getSelectedItem();
-                int ciclo = (int) spnCiclo.getValue();
                 Docente docente = (Docente) docenteComboBox.getSelectedItem();
 
                 if (nombre.isEmpty() || docente == null) {
-                    JOptionPane.showMessageDialog(CursoView.this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(CursoView.this, "Los campos Nombre y Docente son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                boolean resultado = cursoController.registrarCurso(nombre, creditos, carrera, ciclo, docente.getId());
+                boolean resultado = cursoController.registrarCurso(nombre, creditos, docente.getId_docente());
 
                 if (resultado) {
                     JOptionPane.showMessageDialog(CursoView.this, "Curso registrado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                    limpiarCampos(txtNombre, spnCreditos, spnCiclo);
+                    limpiarCampos();
                     cargarCursos();
                 } else {
                     JOptionPane.showMessageDialog(CursoView.this, "Error al registrar curso", "Error", JOptionPane.ERROR_MESSAGE);
@@ -146,7 +149,7 @@ public class CursoView extends JFrame {
         btnLimpiar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                limpiarCampos(txtNombre, spnCreditos, spnCiclo);
+                limpiarCampos();
             }
         });
 
@@ -165,13 +168,11 @@ public class CursoView extends JFrame {
                 if (curso != null) {
                     txtNombre.setText(curso.getNombre());
                     spnCreditos.setValue(curso.getCreditos());
-                    carreraComboBox.setSelectedItem(curso.getCarrera());
-                    spnCiclo.setValue(curso.getCiclo());
 
                     // Buscar y seleccionar el docente correspondiente
                     for (int i = 0; i < docenteComboBox.getItemCount(); i++) {
                         Docente d = docenteComboBox.getItemAt(i);
-                        if (d.getId() == curso.getDocenteId()) {
+                        if (d.getId_docente() == curso.getId_docente()) {
                             docenteComboBox.setSelectedIndex(i);
                             break;
                         }
@@ -182,20 +183,18 @@ public class CursoView extends JFrame {
                     if (confirm == JOptionPane.YES_OPTION) {
                         String nombre = txtNombre.getText();
                         int creditos = (int) spnCreditos.getValue();
-                        String carrera = (String) carreraComboBox.getSelectedItem();
-                        int ciclo = (int) spnCiclo.getValue();
                         Docente docente = (Docente) docenteComboBox.getSelectedItem();
 
                         if (nombre.isEmpty() || docente == null) {
-                            JOptionPane.showMessageDialog(CursoView.this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(CursoView.this, "Los campos Nombre y Docente son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
 
-                        boolean resultado = cursoController.actualizarCurso(id, nombre, creditos, carrera, ciclo, docente.getId());
+                        boolean resultado = cursoController.actualizarCurso(id, nombre, creditos, docente.getId_docente());
 
                         if (resultado) {
                             JOptionPane.showMessageDialog(CursoView.this, "Curso actualizado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                            limpiarCampos(txtNombre, spnCreditos, spnCiclo);
+                            limpiarCampos();
                             cargarCursos();
                         } else {
                             JOptionPane.showMessageDialog(CursoView.this, "Error al actualizar curso", "Error", JOptionPane.ERROR_MESSAGE);
@@ -238,54 +237,39 @@ public class CursoView extends JFrame {
             }
         });
 
-        btnFiltrar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String carreraFiltro = (String) filterCarreraComboBox.getSelectedItem();
-
-                if (carreraFiltro.equals("Todas")) {
-                    cargarCursos();
-                } else {
-                    cargarCursosPorCarrera(carreraFiltro);
-                }
-            }
+        // Listener para el botón de filtro
+        btnFiltrar.addActionListener(e -> {
+            String nombreFiltro = txtFiltroNombre.getText();
+            int creditosFiltro = (int) spnFiltroCreditos.getValue();
+            cargarCursos(nombreFiltro, creditosFiltro); // Cargar cursos aplicando los filtros
         });
     }
 
     private void cargarCursos() {
-        tableModel.setRowCount(0);
-        List<Curso> cursos = cursoController.listarCursos();
-
-        for (Curso curso : cursos) {
-            Docente docente = docenteController.buscarDocentePorId(curso.getDocenteId());
-            String nombreDocente = (docente != null) ? docente.getNombre() + " " + docente.getApellido() : "Desconocido";
-
-            Object[] row = {
-                    curso.getId(),
-                    curso.getNombre(),
-                    curso.getCreditos(),
-                    curso.getCarrera(),
-                    curso.getCiclo(),
-                    nombreDocente
-            };
-            tableModel.addRow(row);
-        }
+        cargarCursos("", 0); // Cargar todos los cursos por defecto (0 para créditos significa sin filtro)
     }
 
-    private void cargarCursosPorCarrera(String carrera) {
+    private void cargarCursos(String nombreFiltro, int creditosFiltro) {
         tableModel.setRowCount(0);
-        List<Curso> cursos = cursoController.buscarCursosPorCarrera(carrera);
+        List<Curso> cursos;
+
+        boolean nombreVacio = (nombreFiltro == null || nombreFiltro.trim().isEmpty());
+        boolean creditosInvalidos = (creditosFiltro <= 0); // Consideramos 0 como "sin filtro" o inválido
+
+        if (nombreVacio && creditosInvalidos) {
+            cursos = cursoController.listarCursos();
+        } else {
+            cursos = cursoController.buscarCursosPorNombreYCreditos(nombreFiltro, creditosFiltro);
+        }
 
         for (Curso curso : cursos) {
-            Docente docente = docenteController.buscarDocentePorId(curso.getDocenteId());
-            String nombreDocente = (docente != null) ? docente.getNombre() + " " + docente.getApellido() : "Desconocido";
+            Docente docente = docenteController.buscarDocentePorId(curso.getId_docente());
+            String nombreDocente = (docente != null) ? docente.getNombre() : "Desconocido";
 
             Object[] row = {
-                    curso.getId(),
+                    curso.getId_curso(),
                     curso.getNombre(),
                     curso.getCreditos(),
-                    curso.getCarrera(),
-                    curso.getCiclo(),
                     nombreDocente
             };
             tableModel.addRow(row);
@@ -299,11 +283,27 @@ public class CursoView extends JFrame {
         for (Docente docente : docentes) {
             docenteComboBox.addItem(docente);
         }
+        // Asegurarse de que el ComboBox muestre el nombre del docente
+        docenteComboBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Docente) {
+                    Docente doc = (Docente) value;
+                    setText(doc.getNombre());
+                }
+                return this;
+            }
+        });
     }
 
-    private void limpiarCampos(JTextField txtNombre, JSpinner spnCreditos, JSpinner spnCiclo) {
+    private void limpiarCampos() {
         txtNombre.setText("");
         spnCreditos.setValue(1);
-        spnCiclo.setValue(1);
+        if (docenteComboBox.getItemCount() > 0) {
+            docenteComboBox.setSelectedIndex(0);
+        }
+        txtFiltroNombre.setText(""); // Limpiar también los campos de filtro
+        spnFiltroCreditos.setValue(0);
     }
 }

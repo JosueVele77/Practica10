@@ -1,7 +1,6 @@
 package model;
 
 import connection.query;
-import model.Estudiante;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ public class EstudianteDAO {
 
     public List<Estudiante> getAllEstudiantes() {
         List<Estudiante> estudiantes = new ArrayList<>();
-        String sql = "SELECT * FROM estudiante";
+        String sql = "SELECT id_estudiante, nombre, email, carrera, anio_ingreso FROM estudiante";
 
         try {
             ResultSet rs = q.queryRest(sql);
@@ -38,7 +37,7 @@ public class EstudianteDAO {
     }
 
     public Estudiante getEstudianteById(int id) {
-        String sql = "SELECT * FROM estudiante WHERE id_estudiante = " + id;
+        String sql = "SELECT id_estudiante, nombre, email, carrera, anio_ingreso FROM estudiante WHERE id_estudiante = " + id;
         Estudiante estudiante = null;
 
         try {
@@ -79,5 +78,76 @@ public class EstudianteDAO {
     public boolean deleteEstudiante(int id) {
         String sql = "DELETE FROM estudiante WHERE id_estudiante = " + id;
         return q.queryUpdate(sql);
+    }
+
+    public List<Estudiante> getEstudiantesByCarrera(String carrera) {
+        List<Estudiante> estudiantes = new ArrayList<>();
+        String sql = String.format("SELECT id_estudiante, nombre, email, carrera, anio_ingreso FROM estudiante WHERE carrera = '%s'", carrera);
+
+        try {
+            ResultSet rs = q.queryRest(sql);
+            while (rs.next()) {
+                Estudiante e = new Estudiante();
+                e.setId_estudiante(rs.getInt("id_estudiante"));
+                e.setNombre(rs.getString("nombre"));
+                e.setEmail(rs.getString("email"));
+                e.setCarrera(rs.getString("carrera"));
+                e.setAnio_ingreso(rs.getInt("anio_ingreso"));
+                estudiantes.add(e);
+            }
+            rs.close();
+            q.closeConn();
+        } catch (SQLException e) {
+            System.err.println("Error al obtener estudiantes por carrera: " + e.getMessage());
+        }
+        return estudiantes;
+    }
+
+    // Nuevo método para buscar estudiantes por año de ingreso
+    public List<Estudiante> getEstudiantesByAnioIngreso(int anioIngreso) {
+        List<Estudiante> estudiantes = new ArrayList<>();
+        String sql = "SELECT id_estudiante, nombre, email, carrera, anio_ingreso FROM estudiante WHERE anio_ingreso = " + anioIngreso;
+
+        try {
+            ResultSet rs = q.queryRest(sql);
+            while (rs.next()) {
+                Estudiante e = new Estudiante();
+                e.setId_estudiante(rs.getInt("id_estudiante"));
+                e.setNombre(rs.getString("nombre"));
+                e.setEmail(rs.getString("email"));
+                e.setCarrera(rs.getString("carrera"));
+                e.setAnio_ingreso(rs.getInt("anio_ingreso"));
+                estudiantes.add(e);
+            }
+            rs.close();
+            q.closeConn();
+        } catch (SQLException e) {
+            System.err.println("Error al obtener estudiantes por año de ingreso: " + e.getMessage());
+        }
+        return estudiantes;
+    }
+
+    // Nuevo método para buscar estudiantes por año de ingreso y carrera
+    public List<Estudiante> getEstudiantesByAnioIngresoAndCarrera(int anioIngreso, String carrera) {
+        List<Estudiante> estudiantes = new ArrayList<>();
+        String sql = String.format("SELECT id_estudiante, nombre, email, carrera, anio_ingreso FROM estudiante WHERE anio_ingreso = %d AND carrera = '%s'", anioIngreso, carrera);
+
+        try {
+            ResultSet rs = q.queryRest(sql);
+            while (rs.next()) {
+                Estudiante e = new Estudiante();
+                e.setId_estudiante(rs.getInt("id_estudiante"));
+                e.setNombre(rs.getString("nombre"));
+                e.setEmail(rs.getString("email"));
+                e.setCarrera(rs.getString("carrera"));
+                e.setAnio_ingreso(rs.getInt("anio_ingreso"));
+                estudiantes.add(e);
+            }
+            rs.close();
+            q.closeConn();
+        } catch (SQLException e) {
+            System.err.println("Error al obtener estudiantes por año de ingreso y carrera: " + e.getMessage());
+        }
+        return estudiantes;
     }
 }

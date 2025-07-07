@@ -6,6 +6,16 @@ public class Docente {
     private String email;
     private String departamento;
 
+    public Docente() {
+    }
+
+    public Docente(int id_docente, String nombre, String email, String departamento) {
+        this.id_docente = id_docente;
+        this.nombre = nombre;
+        this.email = email;
+        this.departamento = departamento;
+    }
+
     // Getters y Setters
     public int getId_docente() { return id_docente; }
     public void setId_docente(int id_docente) { this.id_docente = id_docente; }
